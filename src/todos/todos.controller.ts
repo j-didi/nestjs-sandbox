@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Post, Put } from '@nestjs/common';
+import { Body, Get } from '@nestjs/common';
 import { GetTodosHandler } from './usecases/getAll/get-todos.handler';
 import { GetTodoByIdHandler } from './usecases/getById/get-todo-by-id.handler';
 import { CreateTodoHandler } from './usecases/create/create-todo.handler';
@@ -12,16 +12,14 @@ import { CreateTodoCommand } from './usecases/create/create-todo.command';
 import { CreateTodoResult } from './usecases/create/create-todo.result';
 import { UuidParam } from '../commons/uuid-param';
 import {
-  ApiBadRequestResponse,
-  ApiNotFoundResponse,
-  ApiTags,
-} from '@nestjs/swagger';
-import { HttpNotFoundResult } from '../commons/http-not-found-result';
-import { HttpSingleBadRequestResult } from '../commons/http-single-bad-request-result';
-import { HttpMultipleBadRequestResult } from '../commons/http-multiple-bad-request-result';
+  ApiController,
+  CustomDelete,
+  CustomGetById,
+  CustomPost,
+  CustomPut,
+} from '../commons/custom-decorators';
 
-@ApiTags('Todos')
-@Controller('todos')
+@ApiController('Todos')
 export class TodosController {
   constructor(
     private readonly getTodosHandler: GetTodosHandler,
@@ -37,55 +35,27 @@ export class TodosController {
     return this.getTodosHandler.handle();
   }
 
-  @Get(':id')
-  @ApiNotFoundResponse({
-    description: 'Record not found',
-    type: HttpNotFoundResult,
-  })
+  @CustomGetById(':id')
   getById(@UuidParam('id') id: UUID): GetTodoByIdResult {
     return this.getTodoByIdHandler.handle(id);
   }
 
-  @Post()
-  @ApiBadRequestResponse({
-    description: 'Invalid input',
-    type: HttpMultipleBadRequestResult,
-  })
+  @CustomPost()
   save(@Body() command: CreateTodoCommand): CreateTodoResult {
     return this.createTodoHandler.handle(command);
   }
 
-  @Put(':id/put-in-progress')
-  @ApiNotFoundResponse({
-    description: 'Record not found',
-    type: HttpNotFoundResult,
-  })
-  @ApiBadRequestResponse({
-    description: 'Breaking business rules',
-    type: HttpSingleBadRequestResult,
-  })
+  @CustomPut(':id/put-in-progress')
   putInProgress(@UuidParam('id') id: UUID): void {
     return this.putTodoInProgressHandler.handle(id);
   }
 
-  @Put(':id/mark-as-done')
-  @ApiNotFoundResponse({
-    description: 'Record not found',
-    type: HttpNotFoundResult,
-  })
-  @ApiBadRequestResponse({
-    description: 'Breaking business rules',
-    type: HttpSingleBadRequestResult,
-  })
+  @CustomPut(':id/mark-as-done')
   markAsDone(@UuidParam('id') id: UUID): void {
     return this.markTodoAsDoneHandler.handle(id);
   }
 
-  @Delete(':id')
-  @ApiNotFoundResponse({
-    description: 'Record not found',
-    type: HttpNotFoundResult,
-  })
+  @CustomDelete(':id')
   delete(@UuidParam('id') id: UUID): void {
     return this.deleteTodoHandler.handle(id);
   }
