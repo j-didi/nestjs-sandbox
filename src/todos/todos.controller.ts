@@ -31,32 +31,32 @@ export class TodosController {
   ) {}
 
   @Get()
-  get(): GetTodosResult[] {
-    return this.getTodosHandler.handle();
+  async get(): Promise<GetTodosResult[]> {
+    return await this.getTodosHandler.handle();
   }
 
   @CustomGetById(':id')
-  getById(@UuidParam('id') id: UUID): GetTodoByIdResult {
-    return this.getTodoByIdHandler.handle(id);
+  async getById(@UuidParam('id') id: UUID): Promise<GetTodoByIdResult> {
+    return await this.getTodoByIdHandler.handle(id);
   }
 
   @CustomPost()
-  save(@Body() command: CreateTodoCommand): CreateTodoResult {
-    return this.createTodoHandler.handle(command);
+  async save(@Body() command: CreateTodoCommand): Promise<CreateTodoResult> {
+    return await this.createTodoHandler.handle(command);
   }
 
   @CustomPut(':id/put-in-progress')
-  putInProgress(@UuidParam('id') id: UUID): void {
-    return this.putTodoInProgressHandler.handle(id);
+  async putInProgress(@UuidParam('id') id: UUID): Promise<void> {
+    return await this.putTodoInProgressHandler.handle(id);
   }
 
   @CustomPut(':id/mark-as-done')
-  markAsDone(@UuidParam('id') id: UUID): void {
-    return this.markTodoAsDoneHandler.handle(id);
+  async markAsDone(@UuidParam('id') id: UUID): Promise<void> {
+    return await this.markTodoAsDoneHandler.handle(id);
   }
 
   @CustomDelete(':id')
-  delete(@UuidParam('id') id: UUID): void {
-    return this.deleteTodoHandler.handle(id);
+  async delete(@UuidParam('id') id: UUID): Promise<void> {
+    return await this.deleteTodoHandler.handle(id);
   }
 }

@@ -1,9 +1,14 @@
 import { randomUUID, UUID } from 'crypto';
 import { TodoStatus } from './todo-status.enum';
 import { BadRequestException } from '@nestjs/common';
+import { Column, Entity, PrimaryColumn } from 'typeorm';
 
+@Entity()
 export class Todo {
+  @PrimaryColumn()
   readonly id: UUID;
+
+  @Column()
   readonly description: string;
 
   constructor(name: string) {
@@ -12,6 +17,7 @@ export class Todo {
     this._status = TodoStatus.Created;
   }
 
+  @Column({ name: 'status' })
   private _status: TodoStatus;
 
   get status(): TodoStatus {

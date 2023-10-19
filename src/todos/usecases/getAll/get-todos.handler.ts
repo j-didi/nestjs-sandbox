@@ -1,13 +1,19 @@
 import { Injectable } from '@nestjs/common';
-import { TodosRepository } from '../../todos.repository';
 import { GetTodosResult } from './get-todos.result';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Todo } from '../../todo.entity';
 
 @Injectable()
 export class GetTodosHandler {
-  constructor(private readonly repository: TodosRepository) {}
+  constructor(
+    @InjectRepository(Todo) private readonly repository: Repository<Todo>,
+  ) {}
 
-  handle(): GetTodosResult[] {
-    const todos = this.repository.get();
-    return todos.map((todo) => new GetTodosResult(todo));
+  async handle(): Promise<GetTodosResult[]> {
+    const todos = await this.repository.find();
+    return todos.map(
+      (todo) => new GetTodosResult(todo.id, todo.description, todo.status),
+    );
   }
 }

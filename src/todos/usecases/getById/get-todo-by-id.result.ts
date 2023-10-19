@@ -1,7 +1,6 @@
 import { TodoStatus } from '../../todo-status.enum';
-import { Todo } from '../../todo.entity';
 import { ApiProperty } from '@nestjs/swagger';
-import { randomUUID } from 'crypto';
+import { randomUUID, UUID } from 'crypto';
 
 export class GetTodoByIdResult {
   @ApiProperty({ example: randomUUID() })
@@ -11,9 +10,9 @@ export class GetTodoByIdResult {
   readonly description: string;
   readonly status: TodoStatus;
 
-  constructor(todo: Todo) {
-    this.id = todo.id;
-    this.description = todo.description;
-    this.status = todo.status;
+  constructor(id: UUID, description: string, status: TodoStatus) {
+    this.id = id;
+    this.description = description;
+    this.status = status;
   }
 }

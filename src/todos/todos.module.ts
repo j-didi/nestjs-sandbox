@@ -5,10 +5,12 @@ import { DeleteTodoHandler } from './usecases/delete/delete-todo.handler';
 import { GetTodosHandler } from './usecases/getAll/get-todos.handler';
 import { MarkTodoAsDoneHandler } from './usecases/markAsDone/mark-todo-as-done.handler';
 import { PutTodoInProgressHandler } from './usecases/putInProgress/put-todo-in-progress.handler';
-import { TodosRepository } from './todos.repository';
 import { GetTodoByIdHandler } from './usecases/getById/get-todo-by-id.handler';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Todo } from './todo.entity';
 
 @Module({
+  imports: [TypeOrmModule.forFeature([Todo])],
   controllers: [TodosController],
   providers: [
     CreateTodoHandler,
@@ -17,7 +19,6 @@ import { GetTodoByIdHandler } from './usecases/getById/get-todo-by-id.handler';
     GetTodoByIdHandler,
     MarkTodoAsDoneHandler,
     PutTodoInProgressHandler,
-    TodosRepository,
   ],
 })
 export class TodosModule {}

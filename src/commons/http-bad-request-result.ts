@@ -8,6 +8,6 @@ export class FailResult {
   @ApiProperty({ example: 'description' })
   field: string;
 
-  @ApiProperty({ example: ['description must be a string'] })
+  @ApiProperty({ example: ['error message'] })
   errors: string[];
 }

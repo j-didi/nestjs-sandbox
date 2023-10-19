@@ -1,17 +1,21 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { TodosRepository } from '../../todos.repository';
 import { UUID } from 'crypto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Todo } from '../../todo.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class PutTodoInProgressHandler {
-  constructor(private readonly repository: TodosRepository) {}
+  constructor(
+    @InjectRepository(Todo) private readonly repository: Repository<Todo>,
+  ) {}
 
-  handle(id: UUID): void {
-    const todo = this.repository.getById(id);
+  async handle(id: UUID): Promise<void> {
+    const todo = await this.repository.findOneBy({ id });
     if (!todo) {
       throw new NotFoundException(`Todo with id #${id} not found!`);
     }
     todo.putInProgress();
-    return this.repository.update(todo);
+    await this.repository.save(todo);
   }
 }

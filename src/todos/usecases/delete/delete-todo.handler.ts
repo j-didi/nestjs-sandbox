@@ -1,16 +1,20 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { TodosRepository } from '../../todos.repository';
 import { UUID } from 'crypto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Todo } from '../../todo.entity';
 
 @Injectable()
 export class DeleteTodoHandler {
-  constructor(private readonly repository: TodosRepository) {}
+  constructor(
+    @InjectRepository(Todo) private readonly repository: Repository<Todo>,
+  ) {}
 
-  handle(id: UUID): void {
-    const todo = this.repository.getById(id);
+  async handle(id: UUID): Promise<void> {
+    const todo = this.repository.findOneBy({ id });
     if (!todo) {
       throw new NotFoundException(`Todo with id #${id} not found!`);
     }
-    this.repository.delete(id);
+    await this.repository.delete(id);
   }
 }
