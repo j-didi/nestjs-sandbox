@@ -1,24 +1,11 @@
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Sandbox to learn NestJS.
 
-## Installation
-
-```bash
-$ npm install
-```
-
-## Running the app
+## How to Run
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+$ docker-compose up -d
 ```
 
 ## Swagger
